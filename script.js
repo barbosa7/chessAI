@@ -11,7 +11,7 @@ var AImove = function (chessgame) {
     for (var i=0; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = evaluateboard(chessgame.board());
+        temp = calcinadvance(3,chessgame,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
@@ -19,6 +19,44 @@ var AImove = function (chessgame) {
         }
     }
     return topmove;
+}
+
+var calcinadvance = function (vardepth, chessgame, myturn){
+    if (vardepth==0){
+        return evaluateboard(chessgame.board());
+    }
+    if(myturn){
+    const moves = chessgame.ugly_moves()
+    var topmove;
+    var pos = -999;
+    var temp;
+    for (var i=0; i<moves.length; i++) {
+        chessgame.ugly_move(moves[i]);
+        temp = calcinadvance(vardepth-1,chessgame,!myturn);
+        chessgame.undo();
+        if (temp > pos) {
+            topmove = moves[i];
+            pos=temp;
+        }
+    }
+    return pos;
+    }
+    else{
+        const moves = chessgame.ugly_moves()
+        var topmove;
+        var pos = -999;
+        var temp;
+        for (var i=0; i<moves.length; i++) {
+            chessgame.ugly_move(moves[i]);
+            //alert(vardepth);
+            temp = calcinadvance(vardepth-1,chessgame,!myturn);
+            chessgame.undo();
+            if (temp < pos) {
+                topmove = moves[i];
+                pos=temp;
+            }
+        }
+    }
 }
 
 var evaluateboard = function (board) {
