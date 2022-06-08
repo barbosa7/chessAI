@@ -4,7 +4,7 @@ let allboards = [];
 /*The "AI" part starts here */
 
 var AImove = function (chessgame) {
-    //alert(localStorage.getItem(game.fen()))
+    alert(allboards)
     const moves = chessgame.ugly_moves()
     var topmove;
     var pos = -999;
@@ -12,7 +12,7 @@ var AImove = function (chessgame) {
     for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(0,chessgame,-9999,99999,true);
+        temp = calcinadvance(2,chessgame,-9999,99999,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
@@ -131,11 +131,11 @@ var makeBestMove = function () {
     if (game.game_over()) {
             if (!game.in_draw()){
             for(position of allboards){
-                if (!localStorage.getItem(game.fen())){
-                    localStorage.setItem(game.fen(),1);
+                if (!localStorage.getItem(position)){
+                    localStorage.setItem(position,1);
                 }
                 else {
-                    localStorage.setItem(game.fen(),Storage.getItem(game.fen())+1);
+                    localStorage.setItem(position,localStorage.getItem(position)+1);
                 }
             }
          }
