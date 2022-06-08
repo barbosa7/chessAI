@@ -4,7 +4,6 @@ let allboards = [];
 /*The "AI" part starts here */
 
 var AImove = function (chessgame) {
-    alert(allboards)
     const moves = chessgame.ugly_moves()
     var topmove;
     var pos = -999;
