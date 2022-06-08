@@ -1,17 +1,18 @@
 var board,
     game = new Chess();
-
+let allboards = [];
 /*The "AI" part starts here */
 
 var AImove = function (chessgame) {
+    //alert(localStorage.getItem(game.fen()))
     const moves = chessgame.ugly_moves()
     var topmove;
     var pos = -999;
     var temp;
-    for (var i=0; i<moves.length; i++) {
+    for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(2,chessgame,-9999,99999,true);
+        temp = calcinadvance(0,chessgame,-9999,99999,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
@@ -23,7 +24,16 @@ var AImove = function (chessgame) {
 
 var calcinadvance = function (vardepth, chessgame, alpha, beta, myturn){
     if (vardepth==0){
+        console.log(chessgame.fen());
+        console.log(localStorage.getItem(chessgame.fen()));
+        if(!localStorage.getItem(chessgame.fen())){
         return evaluateboard(chessgame.board());
+        }
+        else{
+            //alert('whatou')
+            //alert(localStorage.getItem(chessgame.fen()));
+            return evaluateboard(chessgame.board()) + parseInt(localStorage.getItem(chessgame.fen()));
+        }
     }
     if(!myturn){
     const moves = chessgame.ugly_moves()
@@ -93,7 +103,8 @@ var evaluatepiece = function (piece) {
           case 'b':
             return (piece.color=='w' ? -3 : 3);
           case 'q':
-            return (piece.color=='w' ? -9 : 9);
+
+        //default: return (piece.color=='w' ? -500 : 500);
         default: return 0;
       }
 }
@@ -112,10 +123,22 @@ var makeBestMove = function () {
     //var bestMove = getBestMove(game);
     var bestMove = AImove(game);
     game.ugly_move(bestMove);
+    allboards.push(game.fen());
     
     board.position(game.fen());
     renderMoveHistory(game.history());
+
     if (game.game_over()) {
+            if (!game.in_draw()){
+            for(position of allboards){
+                if (!localStorage.getItem(game.fen())){
+                    localStorage.setItem(game.fen(),1);
+                }
+                else {
+                    localStorage.setItem(game.fen(),Storage.getItem(game.fen())+1);
+                }
+            }
+         }
         alert('Game over');
     }
 };
