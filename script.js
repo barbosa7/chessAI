@@ -11,7 +11,7 @@ var AImove = function (chessgame) {
     for (var i=0; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(3,chessgame,true);
+        temp = calcinadvance(2,chessgame,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
@@ -25,7 +25,7 @@ var calcinadvance = function (vardepth, chessgame, myturn){
     if (vardepth==0){
         return evaluateboard(chessgame.board());
     }
-    if(myturn){
+    if(!myturn){
     const moves = chessgame.ugly_moves()
     var topmove;
     var pos = -999;
@@ -44,11 +44,10 @@ var calcinadvance = function (vardepth, chessgame, myturn){
     else{
         const moves = chessgame.ugly_moves()
         var topmove;
-        var pos = -999;
+        var pos = 999;
         var temp;
         for (var i=0; i<moves.length; i++) {
             chessgame.ugly_move(moves[i]);
-            //alert(vardepth);
             temp = calcinadvance(vardepth-1,chessgame,!myturn);
             chessgame.undo();
             if (temp < pos) {
@@ -56,6 +55,7 @@ var calcinadvance = function (vardepth, chessgame, myturn){
                 pos=temp;
             }
         }
+        return pos
     }
 }
 
