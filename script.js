@@ -29,7 +29,7 @@ var AImove_white = function (chessgame) {
     for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(1,chessgame,-9999,99999,false);
+        temp = calcinadvance(3,chessgame,-9999,99999,false);
         chessgame.undo();
         if (temp <= pos) {
             topmove = moves[i];
@@ -274,6 +274,8 @@ var cfg = {
     onDrop: onDrop,
     onMouseoutSquare: onMouseoutSquare,
     onMouseoverSquare: onMouseoverSquare,
-    onSnapEnd: onSnapEnd
+    onSnapEnd: onSnapEnd,
+    showErrors: 'console'
+    //orientation: 'black'
 };
 board = ChessBoard('board', cfg);
