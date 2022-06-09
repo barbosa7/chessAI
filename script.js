@@ -5,13 +5,13 @@ let allboards = [];
 
 var AImove = function (chessgame) {
     const moves = chessgame.ugly_moves()
-    var topmove;
+    var topmove=moves[0];
     var pos = -999;
     var temp;
     for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(2,chessgame,-9999,99999,true);
+        temp = calcinadvance(1,chessgame,-9999,99999,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
@@ -23,8 +23,8 @@ var AImove = function (chessgame) {
 
 var calcinadvance = function (vardepth, chessgame, alpha, beta, myturn){
     if (vardepth==0){
-        console.log(chessgame.fen());
-        console.log(localStorage.getItem(chessgame.fen()));
+        //console.log(chessgame.fen());
+        //console.log(localStorage.getItem(chessgame.fen()));
         if(!localStorage.getItem(chessgame.fen())){
         return evaluateboard(chessgame.board());
         }
@@ -120,6 +120,20 @@ var onDragStart = function (source, piece, position, orientation) {
 
 var makeBestMove = function () {
     //var bestMove = getBestMove(game);
+    if (game.game_over()) {
+        if (!game.in_draw()){
+        for(position of allboards){
+            if (!localStorage.getItem(position)){
+                localStorage.setItem(position,-1);
+            }
+            else {
+                localStorage.setItem(position,localStorage.getItem(position)-1);
+            }
+        }
+     }
+    alert('Game over');
+}
+    allboards.push(game.fen());
     var bestMove = AImove(game);
     game.ugly_move(bestMove);
     allboards.push(game.fen());
