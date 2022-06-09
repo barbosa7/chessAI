@@ -6,7 +6,7 @@ let allboards = [];
 var AImove = function (chessgame) {
     const moves = chessgame.ugly_moves()
     var topmove=moves[0];
-    var pos = -999;
+    var pos = -99999;
     var temp;
     for (var i=1; i<moves.length; i++) {
         
@@ -14,6 +14,24 @@ var AImove = function (chessgame) {
         temp = calcinadvance(1,chessgame,-9999,99999,true);
         chessgame.undo();
         if (temp >= pos) {
+            topmove = moves[i];
+            pos=temp;
+        }
+    }
+    return topmove;
+}
+
+var AImove_white = function (chessgame) {
+    const moves = chessgame.ugly_moves()
+    var topmove=moves[0];
+    var pos = 99999;
+    var temp;
+    for (var i=1; i<moves.length; i++) {
+        
+        chessgame.ugly_move(moves[i]);
+        temp = calcinadvance(1,chessgame,-9999,99999,false);
+        chessgame.undo();
+        if (temp <= pos) {
             topmove = moves[i];
             pos=temp;
         }
@@ -205,7 +223,7 @@ var onDrop = function (source, target) {
     renderMoveHistory(game.history());
     window.setTimeout(makeBestMove, 250);
 };
-
+ 
 var onSnapEnd = function () {
     board.position(game.fen());
 };
