@@ -11,7 +11,7 @@ var AImove = function (chessgame) {
     for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(2,chessgame,-9999,99999,true);
+        temp = calcinadvance(0,chessgame,-9999,99999,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
@@ -119,10 +119,10 @@ var evaluatepiece = function (piece) {
             return (piece.color=='w' ? -3 : 3);
           case 'b':
             return (piece.color=='w' ? -3 : 3);
-          case 'q':
+          case 'q': return (piece.color=='w' ? -9 : 9);
 
-        //default: return (piece.color=='w' ? -500 : 500);
-        default: return 0;
+        default: return (piece.color=='w' ? -10 : 10);
+        //default: return 0;
       }
 }
 
@@ -149,6 +149,8 @@ var makeBestMove = function () {
             }
         }
      }
+     alert("bot lost")
+         alert(game.fen());
     alert('Game over');
 }
     allboards.push(game.fen());
@@ -169,7 +171,10 @@ var makeBestMove = function () {
                     localStorage.setItem(position,localStorage.getItem(position)+1);
                 }
             }
+            alert("bot won")
+         alert(game.fen());
          }
+         
         alert('Game over');
     }
 };
