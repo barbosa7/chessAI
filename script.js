@@ -11,7 +11,7 @@ var AImove = function (chessgame) {
     for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(1,chessgame,-9999,99999,true);
+        temp = calcinadvance(2,chessgame,-9999,99999,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
