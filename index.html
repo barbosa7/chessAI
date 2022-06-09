@@ -26,11 +26,29 @@
     <span>Positions/s: <span id="positions-per-s"></span> </span>
     <br>
     <br>-->
+    div><button id="starttime" class="startbutton"> let the bot practice</button></div>
+    <div><button id="letsreset" class="startbutton"> reset the board </button></div>
     <div class="move-history"> Move History
     </div> 
     <div id="move-history" class="move-history">
     </div> 
+    
 </div>
+<script>
+    let starttime = document.getElementById("starttime");
+    starttime.addEventListener('click', event => {
+      botplay();
+    });
+  </script>
+  <script>
+    function test() {
+      alert("The function 'test' is executed");
+    }
+    let letsreset = document.getElementById("letsreset");
+    letsreset.addEventListener('click', event => {
+      goagain();
+    });
+  </script>
 <script src="lib/jquery/jquery-3.2.1.min.js"></script>
 <script src="lib/chessboardjs/js/chess.js"></script>
 <script src="lib/chessboardjs/js/chessboard-0.3.0.js"></script>

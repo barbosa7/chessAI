@@ -5,50 +5,52 @@ let allboards = [];
 
 var AImove = function (chessgame) {
     const moves = chessgame.ugly_moves()
-    var topmove=moves[0];
+    var topmove;
     var pos = -99999;
     var temp;
     for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(2,chessgame,-9999,99999,true);
+        temp = calcinadvance(1,chessgame,-9999,99999,true);
         chessgame.undo();
         if (temp >= pos) {
             topmove = moves[i];
             pos=temp;
         }
     }
+    if (pos<=0){
+        return (moves[Math.floor(Math.random() * moves.length)])
+    }
     return topmove;
 }
 
 var AImove_white = function (chessgame) {
     const moves = chessgame.ugly_moves()
-    var topmove=moves[0];
+    var topmove;
     var pos = 99999;
     var temp;
     for (var i=1; i<moves.length; i++) {
         
         chessgame.ugly_move(moves[i]);
-        temp = calcinadvance(2,chessgame,-9999,99999,false);
+        temp = calcinadvance(1,chessgame,-9999,99999,false);
         chessgame.undo();
         if (temp <= pos) {
             topmove = moves[i];
             pos=temp;
         }
     }
+    if (pos>=0){
+        return (moves[Math.floor(Math.random() * moves.length)]);
+    }
     return topmove;
-}
+};
 
 var calcinadvance = function (vardepth, chessgame, alpha, beta, myturn){
     if (vardepth==0){
-        //console.log(chessgame.fen());
-        //console.log(localStorage.getItem(chessgame.fen()));
         if(!localStorage.getItem(chessgame.fen())){
         return evaluateboard(chessgame.board());
         }
         else{
-            //alert('whatou')
-            //alert(localStorage.getItem(chessgame.fen()));
             return evaluateboard(chessgame.board()) + parseInt(localStorage.getItem(chessgame.fen()));
         }
     }
@@ -145,13 +147,15 @@ var makeBestMove = function () {
                 localStorage.setItem(position,-1);
             }
             else {
-                localStorage.setItem(position,localStorage.getItem(position)-1);
+                localStorage.setItem(position,(parseInt(localStorage.getItem(position))-1));
             }
         }
+        console.log("bot lost")
+         
      }
-     alert("bot lost")
-         alert(game.fen());
-    alert('Game over');
+     console.log(game.fen());
+    console.log('Game over');
+    return true;
 }
     allboards.push(game.fen());
     var bestMove = AImove(game);
@@ -168,14 +172,14 @@ var makeBestMove = function () {
                     localStorage.setItem(position,1);
                 }
                 else {
-                    localStorage.setItem(position,localStorage.getItem(position)+1);
+                    localStorage.setItem(position,(parseInt(localStorage.getItem(position))+1));
                 }
             }
-            alert("bot won")
-         alert(game.fen());
+            console.log("bot won")
          }
-         
-        alert('Game over');
+         console.log(game.fen());
+        console.log('Game over');
+        return true;
     }
 };
 
@@ -184,7 +188,7 @@ var positionCount;
 
 var getBestMove = function (game) {
     if (game.game_over()) {
-        alert('Game over');
+        console.log('Game over');
     }
 
     positionCount = 0;
@@ -209,9 +213,9 @@ var renderMoveHistory = function (moves) {
         historyElement.append('<span>' + moves[i] + ' ' + ( moves[i + 1] ? moves[i + 1] : ' ') + '</span><br>')
     }
     historyElement.scrollTop(historyElement[0].scrollHeight);
-
 };
 
+//so whenever oponent makes first move, then we instantly play ours and wait for them to play again
 var onDrop = function (source, target) {
 
     var move = game.move({
@@ -231,6 +235,26 @@ var onDrop = function (source, target) {
  
 var onSnapEnd = function () {
     board.position(game.fen());
+};
+
+let goagain = function () {
+    game.reset();
+};
+
+//the point of this function is to let the bot play itself once the button is clicked.
+var botplay = function () {
+    var move;
+    while (true){
+       console.log('moves were made');
+       move = AImove_white(game);
+       game.ugly_move(move);
+       renderMoveHistory(game.history());
+       if (makeBestMove()){
+        //break;
+        game.reset();
+       }; 
+       renderMoveHistory(game.history());
+    }
 };
 
 var onMouseoverSquare = function(square, piece) {
