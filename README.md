@@ -31,4 +31,31 @@ As you can see it looks fairly similairly, but with 2 extra buttons, one of them
  
  ![Screenshot 2022-06-13 at 22 45 59](https://user-images.githubusercontent.com/81977215/173442321-b3a1cda7-cdb9-47ab-b023-4de6546d499f.png)
 
+## Implementation history
 
+this is going to be a more technical file of the readme file, detailing how I'm going about programming this bot, I'll do my best to keep it easy to understand but it's probably going to be a bit heavier (this is your queue to go get your coffee if you haven't had one).
+
+After reading a bit about how the libraries work etc. the first step was obviously to implement a logic for the bot to follow, in order to know what moves to take, easier said than done of course.
+
+Anyone who ever played chess knows that a good played has to calculate a bit, for each move, what consequences will it have, "if I play this, what will my opponent play afterwards and what will I do next... Will I win this exchange? etc." we are talking about a bot here, so the best way to do this is for the engine to look at every possible play he can make, for each of those moves see what moves the opponent have, assume he will make the best one and so on, this begs the question, how far into the future do we look? 2 moves ahead? 4? 30? The higher the number we choose the better the bot will play, yet it will be exponentially slower, since it has to look at a lot more moves.
+
+```js 
+  for (var i=1; i<moves.length; i++) {
+        
+        chessgame.ugly_move(moves[i]);
+        temp = calcinadvance(2,chessgame,-9999,99999,true);
+        chessgame.undo();
+        if (temp >= pos) {
+            topmove = moves[i];
+            pos=temp;
+        }
+    }
+    if (pos<=0){
+        return (moves[Math.floor(Math.random() * moves.length)])
+    }
+    
+```
+    
+this is the algorithm we use for that, we will get into the -9999 and ythe 9999 later, for now it's only important to understand that "calcinadvance" does what I explained before, it recursively calculates all the possible moves, the first parameter is the depth (we are using 2 right now, but plan to use a higher depth later once the algorithm is more optimized and runs faster. the last parameter is a boolean that tells the function which player is playing.
+
+With this method we are able to basically look into the future for a number of moves, but when we reach depth 0 we still have to be able to evaluate the position. This is the key part, and arguably the hardest one to implement, how will the bot look at a position and know if it's good or bad ( and how good vs. how bad?)
